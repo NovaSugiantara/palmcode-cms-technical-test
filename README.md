@@ -9,8 +9,8 @@ This is a Headless CMS built using the TALL Stack (Tailwind CSS, Alpine.js, Lara
 ### 1. Clone Repository
 
 ```bash
-git clone https://github.com/yourname/palmcode-cms.git
-cd palmcode-cms
+git clone https://github.com/NovaSugiantara/palmcode-cms-technical-test.git
+cd palmcode-cms-technical-test
 ```
 
 ### 2. Install Dependencies
