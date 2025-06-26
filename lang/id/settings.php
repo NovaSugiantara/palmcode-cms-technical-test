@@ -1,0 +1,26 @@
+<?php
+
+return [
+    'title' => 'Pengaturan',
+    'subtitle' => 'Di sini Anda dapat mengubah pengaturan akun Anda.',
+    'appearance' => 'Tampilan',
+    'update_your_settings_appearance' => 'Perbarui pengaturan tampilan Anda',
+    'light' => 'Terang',
+    'dark' => 'Gelap',
+    'system' => 'Sistem',
+    'delete_account_title' => 'Hapus akun',
+    'delete_account_subtitle' => 'Di sini Anda dapat menghapus akun Anda secara permanen. Tindakan ini permanen dan tidak dapat dibatalkan.',
+    'delete_are_you_sure' => 'Apakah Anda yakin ingin menghapus akun Anda?',
+    'delete_are_you_sure_text' => 'Setelah akun Anda dihapus, semua sumber daya dan data akan dihapus secara permanen. Silakan masukkan kata sandi Anda untuk mengonfirmasi bahwa Anda ingin menghapus akun secara permanen.',
+    'password' => 'Kata sandi',
+    'update_password' => 'Perbarui kata sandi',
+    'update_password_description' => 'Pastikan akun Anda menggunakan kata sandi yang panjang dan acak agar tetap aman.',
+    'current_password' => 'Kata sandi saat ini',
+    'new_password' => 'Kata sandi baru',
+    'confirm_new_password' => 'Konfirmasi kata sandi baru',
+    'profile' => 'Akun',
+    'profile_description' => 'Perbarui informasi akun dan alamat email Anda.',
+    'your_email_is_unverified' => 'Email Anda belum terverifikasi.',
+    'click_here_to_request_verify' => 'Klik di sini untuk meminta email verifikasi baru',
+    'verification_link_sent' => 'Email verifikasi baru telah dikirim',
+];
