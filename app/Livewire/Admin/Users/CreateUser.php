@@ -49,7 +49,7 @@ class CreateUser extends Component
         if ($this->selectedRoles !== []) {
             /** @var User $user */
             // Convert the userRoles to integers
-            $userRoles = Arr::map($this->selectedRoles, fn ($role): int => (int) $role);
+            $userRoles = Arr::map($this->selectedRoles, fn($role): int => (int) $role);
 
             // Sync the user roles
             $user->syncRoles($userRoles);
@@ -58,18 +58,19 @@ class CreateUser extends Component
         $this->flash('success', __('users.user_created'));
 
         $this->redirect(route('admin.users.index'), true);
-
     }
 
     #[Layout('components.layouts.admin')]
     public function render(): View
     {
+        $locales = [
+            'en' => 'English',
+            'id' => 'Bahasa Indonesia',
+        ];
+
         return view('livewire.admin.users.create-user', [
             'roles' => Role::all(),
-            'locales' => [
-                'en' => 'English',
-                'da' => 'Danish',
-            ],
+            'locales' => $locales,
         ]);
     }
 }

@@ -56,7 +56,7 @@ class EditUser extends Component
         ]);
 
         // Convert the userRoles to integers
-        $userRoles = Arr::map($this->userRoles, fn ($role): int => (int) $role);
+        $userRoles = Arr::map($this->userRoles, fn($role): int => (int) $role);
 
         // Sync the user roles
         $this->user->syncRoles($userRoles);
@@ -64,18 +64,19 @@ class EditUser extends Component
         $this->flash('success', __('users.user_updated'));
 
         $this->redirect(route('admin.users.index'), true);
-
     }
 
     #[Layout('components.layouts.admin')]
     public function render(): View
     {
+        $locales = [
+            'en' => 'English',
+            'id' => 'Bahasa Indonesia',
+        ];
+
         return view('livewire.admin.users.edit-user', [
             'roles' => Role::all(),
-            'locales' => [
-                'en' => 'English',
-                'da' => 'Danish',
-            ],
+            'locales' => $locales,
         ]);
     }
 }

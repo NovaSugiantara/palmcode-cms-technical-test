@@ -31,11 +31,13 @@ class Locale extends Component
     #[Layout('components.layouts.app')]
     public function render(): View
     {
+        $locales = [
+            'en' => 'English',
+            'id' => 'Bahasa Indonesia',
+        ];
+
         return view('livewire.settings.locale', [
-            'locales' => [
-                'en' => 'English',
-                'da' => 'Danish',
-            ],
+            'locales' => $locales,
         ]);
     }
 }

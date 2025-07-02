@@ -1,56 +1,52 @@
 services:
-    web-palmcode:
+    web:
         build:
-            context: .
-            dockerfile: Dockerfile
-        image: franken-laravel/app
+            context: ./
+            dockerfile: ./.docker/php/Dockerfile.local
         ports:
-            - "${APP_PORT:-18083}:80"
-            - "${VITE_PORT:-5173}:${VITE_PORT:-5173}"
-        environment:
-            APP_ENV: local
-            APP_DEBUG: true
+            - ${APP_PORT:-8000}:8000
+            # - ${VITE_PORT:-5173}:${VITE_PORT:-5173}
         volumes:
-            - ".:/app"
+            - ./:${WORKDIR}
+            - ./vendor/:${WORKDIR}/vendor
         networks:
-            - sail
+            - lara12-palmcode
         depends_on:
-            - mysql
+            - mysql_db
             - redis
-
-    mysql:
-        image: "mysql/mysql-server:8.0"
+            - minio
+            - mailpit
+    mysql_db:
+        image: mysql:8.0
         ports:
-            - "${FORWARD_DB_PORT:-3306}:3306"
+            - ${FORWARD_DB_PORT:-3306}:3306
         environment:
-            MYSQL_ROOT_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_ROOT_PASSWORD: ${DB_PASSWORD}
             MYSQL_ROOT_HOST: "%"
-            MYSQL_DATABASE: "${DB_DATABASE}"
-            MYSQL_USER: "${DB_USERNAME}"
-            MYSQL_PASSWORD: "${DB_PASSWORD}"
+            MYSQL_DATABASE: ${DB_DATABASE}
+            MYSQL_USER: ${DB_USERNAME}
+            MYSQL_PASSWORD: ${DB_PASSWORD}
             MYSQL_ALLOW_EMPTY_PASSWORD: 1
         volumes:
-            - "sail-mysql:/var/lib/mysql"
-            - "./vendor/laravel/sail/database/mysql/create-testing-database.sh:/docker-entrypoint-initdb.d/10-create-testing-database.sh"
+            - ${DB_VOLUME_LOCAL:-./database/mysql-test-data}:/var/lib/mysql
         networks:
-            - sail
+            - lara12-palmcode
         healthcheck:
             test:
                 - CMD
-                - mysqladmin
+                - mysql_dbadmin
                 - ping
-                - "-p${DB_PASSWORD}"
+                - -p${DB_PASSWORD}
             retries: 3
             timeout: 5s
-
     redis:
-        image: "redis:alpine"
+        image: redis:alpine
         ports:
-            - "${FORWARD_REDIS_PORT:-6379}:6379"
+            - ${FORWARD_REDIS_PORT:-6379}:6379
         volumes:
-            - "sail-redis:/data"
+            - ${REDIS_VOLUME_LOCAL:-./database/redis-data}:/data
         networks:
-            - sail
+            - lara12-palmcode
         healthcheck:
             test:
                 - CMD
@@ -58,13 +54,36 @@ services:
                 - ping
             retries: 3
             timeout: 5s
-
+    minio:
+        image: minio/minio:latest
+        ports:
+            - ${FORWARD_MINIO_PORT:-9000}:9000
+            - ${FORWARD_MINIO_CONSOLE_PORT:-8900}:8900
+        environment:
+            MINIO_ROOT_USER: ${MINIO_ROOT_USER:-sail}
+            MINIO_ROOT_PASSWORD: ${MINIO_ROOT_PASSWORD:-password}
+        volumes:
+            - ${MINIO_VOLUME_LOCAL:-./storage/minio-data}:/data
+        networks:
+            - lara12-palmcode
+        command: minio server /data/minio --console-address ":${FORWARD_MINIO_CONSOLE_PORT}"
+        healthcheck:
+            test:
+                - CMD
+                - curl
+                - -f
+                - http://localhost:${FORWARD_MINIO_PORT}/minio/health/live
+            retries: 3
+            timeout: 5s
+    mailpit:
+        image: axllent/mailpit:latest
+        ports:
+            - ${FORWARD_MAILPIT_PORT:-1025}:1025
+            - ${FORWARD_MAILPIT_DASHBOARD_PORT:-8025}:8025
+        volumes:
+            - ${MP_VOLUME_LOCAL:-./storage/mail-data}:/data
+        networks:
+            - lara12-palmcode
 networks:
-    sail:
+    lara12-palmcode:
         driver: bridge
-
-volumes:
-    sail-mysql:
-        driver: local
-    sail-redis:
-        driver: local
